@@ -225,6 +225,426 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 40   140     5 3 1</code></pre>
 </div>
 </div>
+<p>#Analisis de datos</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>fb <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"LA MOLINA 2014 POTATO WUE (FB).xlsx"</span>, </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">sheet =</span> <span class="st">"fb"</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(fb)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(fb)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tibble [150 × 18] (S3: tbl_df/tbl/data.frame)
+ $ riego  : chr [1:150] "sequia" "sequia" "irrigado" "sequia" ...
+ $ geno   : chr [1:150] "G01" "G02" "G01" "G02" ...
+ $ block  : num [1:150] 2 4 3 1 2 5 1 4 2 1 ...
+ $ bloque : chr [1:150] "II" "IV" "III" "I" ...
+ $ spad_29: num [1:150] 56.3 52.7 49.2 55.5 58.2 43.5 57.4 56.1 61 60.3 ...
+ $ spad_83: num [1:150] 41.1 47.9 41.6 44.2 32.6 37.8 42.5 35.9 57.5 41.8 ...
+ $ rwc_84 : num [1:150] 61.5 63.2 67.7 64.9 74.5 ...
+ $ op_84  : num [1:150] -2.43 -3.03 -2.5 -2.4 -2.27 ...
+ $ leafdw : num [1:150] 13.28 9.42 18.22 8.84 14.55 ...
+ $ stemdw : num [1:150] 14.87 8.63 24.19 6.58 12.63 ...
+ $ rootdw : num [1:150] 3.83 2.1 3.16 2 1.83 2.83 2.28 3.65 4.04 4.17 ...
+ $ tubdw  : num [1:150] 19.8 17.7 38 13.5 51.1 ...
+ $ biomdw : num [1:150] 51.8 37.8 83.6 30.9 80.2 ...
+ $ hi     : num [1:150] 0.45 0.43 0.455 0.437 0.638 ...
+ $ ttrans : num [1:150] 4.5 3.54 8.39 2.9 7.37 ...
+ $ wue    : num [1:150] 11.51 10.69 9.97 10.65 10.88 ...
+ $ twue   : num [1:150] 4.4 4.99 4.53 4.65 6.94 ...
+ $ lfa    : num [1:150] 2900 2619 7579 2450 5413 ...</code></pre>
+</div>
+</div>
+<p>##Modelo estadistico</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>modelo <span class="ot">&lt;-</span> <span class="fu">aov</span>(<span class="at">formula =</span> lfa <span class="sc">~</span> riego <span class="sc">+</span> geno <span class="sc">+</span>riego<span class="sc">*</span>geno <span class="sc">+</span> bloque, <span class="at">data =</span>fb)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(modelo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Response: lfa
+            Df    Sum Sq   Mean Sq   F value Pr(&gt;F)    
+riego        1 788556926 788556926 1433.7957 &lt;2e-16 ***
+geno        14 261729564  18694969   33.9922 &lt;2e-16 ***
+bloque       4   3435339    858835    1.5616 0.1892    
+riego:geno  14 108147972   7724855   14.0457 &lt;2e-16 ***
+Residuals  116  63797516    549979                     
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(modelo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-4-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-4-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="comparación-de-medias" class="level2">
+<h2 class="anchored" data-anchor-id="comparación-de-medias">Comparación de medias</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(agricolae)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>mc <span class="ot">&lt;-</span> agricolae<span class="sc">::</span><span class="fu">duncan.test</span>(<span class="at">y=</span> modelo, <span class="at">trt =</span> <span class="fu">c</span>(<span class="st">"riego"</span>, <span class="st">"geno"</span>))</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>mc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$statistics
+   MSerror  Df     Mean       CV
+  549978.6 116 4806.708 15.42855
+
+$parameters
+    test     name.t ntr alpha
+  Duncan riego:geno  30  0.05
+
+$duncan
+      Table CriticalRange
+2  2.801028      928.9779
+3  2.947907      977.6910
+4  3.045555     1010.0768
+5  3.117189     1033.8343
+6  3.172876     1052.3034
+7  3.217864     1067.2239
+8  3.255217     1079.6123
+9  3.286875     1090.1118
+10 3.314137     1099.1534
+11 3.337915     1107.0395
+12 3.358871     1113.9897
+13 3.377500     1120.1683
+14 3.394183     1125.7013
+15 3.409216     1130.6870
+16 3.422835     1135.2039
+17 3.435231     1139.3152
+18 3.446561     1143.0726
+19 3.456952     1146.5191
+20 3.466514     1149.6904
+21 3.475338     1152.6169
+22 3.483500     1155.3239
+23 3.491071     1157.8346
+24 3.498115     1160.1708
+25 3.504650     1162.3382
+26 3.510752     1164.3621
+27 3.516453     1166.2529
+28 3.521778     1168.0190
+29 3.526793     1169.6820
+30 3.531442     1171.2240
+
+$means
+                   lfa        std r      se     Min      Max     Q25      Q50
+irrigado:G01  7377.892  583.61443 5 331.656 6539.86  7982.73 7038.08  7578.79
+irrigado:G02  5779.562 1127.71742 5 331.656 4631.00  7392.38 5162.74  5233.55
+irrigado:G03  5416.770   89.80871 5 331.656 5305.77  5545.69 5369.88  5412.51
+irrigado:G04  9668.932  945.94448 5 331.656 8569.08 10811.84 8867.03  9791.10
+irrigado:G05  8878.756 1235.57574 5 331.656 7205.94 10291.06 8189.67  8913.12
+irrigado:G06  7455.364 1009.33982 5 331.656 6576.65  9040.06 6857.13  6938.90
+irrigado:G07  1374.156  411.10652 5 331.656 1065.26  1989.25 1068.97  1140.05
+irrigado:G08  7286.826  282.80318 5 331.656 6998.00  7643.80 7012.74  7310.01
+irrigado:G09 10287.712 1548.81007 5 331.656 8533.54 12296.22 8924.78 10764.71
+irrigado:G10  5271.344  822.34789 5 331.656 4249.18  6164.24 4743.16  5171.21
+irrigado:G11  6854.880 1888.72290 5 331.656 3966.33  8867.09 6210.41  7225.02
+irrigado:G12  7417.258  946.24681 5 331.656 6111.43  8603.78 7164.03  7194.26
+irrigado:G13  8672.380 1015.60193 5 331.656 7180.79  9743.70 8256.98  8750.00
+irrigado:G14  8384.132 1473.21710 5 331.656 6049.52  9776.01 7895.00  8978.89
+irrigado:G15  6367.026  107.45072 5 331.656 6270.00  6522.46 6302.79  6304.88
+sequia:G01    3039.588  115.85242 5 331.656 2900.00  3203.70 2994.58  2999.66
+sequia:G02    2717.050  281.05239 5 331.656 2449.59  3063.35 2487.28  2618.85
+sequia:G03    2059.052  179.44660 5 331.656 1811.97  2274.48 1953.50  2107.76
+sequia:G04    2978.712  302.61678 5 331.656 2511.13  3263.70 2889.83  3010.27
+sequia:G05    1783.678  120.66794 5 331.656 1657.64  1967.49 1700.00  1771.80
+sequia:G06    3348.074  165.94367 5 331.656 3159.54  3550.19 3198.96  3381.68
+sequia:G07     680.734  335.90739 5 331.656  216.31  1097.98  495.83   782.10
+sequia:G08    2373.624  260.99914 5 331.656 2021.37  2697.93 2278.60  2319.71
+sequia:G09    3073.322  198.12400 5 331.656 2781.32  3238.41 2961.78  3150.00
+sequia:G10    2924.648  235.40497 5 331.656 2541.12  3136.07 2909.10  2940.95
+sequia:G11    2062.412  317.51100 5 331.656 1556.38  2301.31 1942.23  2237.88
+sequia:G12    2446.404   37.06811 5 331.656 2400.00  2487.78 2425.26  2438.98
+sequia:G13    3126.100   47.70803 5 331.656 3062.34  3191.97 3110.00  3120.00
+sequia:G14    3514.338  217.30731 5 331.656 3318.36  3811.99 3326.93  3449.76
+sequia:G15    1580.506  248.79682 5 331.656 1176.63  1814.84 1560.00  1601.06
+                  Q75
+irrigado:G01  7750.00
+irrigado:G02  6478.14
+irrigado:G03  5450.00
+irrigado:G04 10305.61
+irrigado:G05  9793.99
+irrigado:G06  7864.08
+irrigado:G07  1607.25
+irrigado:G08  7469.58
+irrigado:G09 10919.31
+irrigado:G10  6028.93
+irrigado:G11  8005.55
+irrigado:G12  8012.79
+irrigado:G13  9430.43
+irrigado:G14  9221.24
+irrigado:G15  6435.00
+sequia:G01    3100.00
+sequia:G02    2966.18
+sequia:G03    2147.55
+sequia:G04    3218.63
+sequia:G05    1821.46
+sequia:G06    3450.00
+sequia:G07     811.45
+sequia:G08    2550.51
+sequia:G09    3235.10
+sequia:G10    3096.00
+sequia:G11    2274.26
+sequia:G12    2480.00
+sequia:G13    3146.19
+sequia:G14    3664.65
+sequia:G15    1750.00
+
+$comparison
+NULL
+
+$groups
+                   lfa groups
+irrigado:G09 10287.712      a
+irrigado:G04  9668.932     ab
+irrigado:G05  8878.756     bc
+irrigado:G13  8672.380      c
+irrigado:G14  8384.132     cd
+irrigado:G06  7455.364     de
+irrigado:G12  7417.258     de
+irrigado:G01  7377.892     de
+irrigado:G08  7286.826     ef
+irrigado:G11  6854.880     ef
+irrigado:G15  6367.026     fg
+irrigado:G02  5779.562     gh
+irrigado:G03  5416.770     gh
+irrigado:G10  5271.344      h
+sequia:G14    3514.338      i
+sequia:G06    3348.074     ij
+sequia:G13    3126.100    ijk
+sequia:G09    3073.322    ijk
+sequia:G01    3039.588    ijk
+sequia:G04    2978.712    ijk
+sequia:G10    2924.648    ijk
+sequia:G02    2717.050   ijkl
+sequia:G12    2446.404  ijklm
+sequia:G08    2373.624  jklmn
+sequia:G11    2062.412   klmn
+sequia:G03    2059.052   klmn
+sequia:G05    1783.678    lmn
+sequia:G15    1580.506    mno
+irrigado:G07  1374.156     no
+sequia:G07     680.734      o
+
+attr(,"class")
+[1] "group"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(mc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 6
+ $ statistics:'data.frame': 1 obs. of  4 variables:
+  ..$ MSerror: num 549979
+  ..$ Df     : int 116
+  ..$ Mean   : num 4807
+  ..$ CV     : num 15.4
+ $ parameters:'data.frame': 1 obs. of  4 variables:
+  ..$ test  : chr "Duncan"
+  ..$ name.t: chr "riego:geno"
+  ..$ ntr   : int 30
+  ..$ alpha : num 0.05
+ $ duncan    :'data.frame': 29 obs. of  2 variables:
+  ..$ Table        : num [1:29] 2.8 2.95 3.05 3.12 3.17 ...
+  ..$ CriticalRange: num [1:29] 929 978 1010 1034 1052 ...
+ $ means     :'data.frame': 30 obs. of  9 variables:
+  ..$ lfa: num [1:30] 7378 5780 5417 9669 8879 ...
+  ..$ std: num [1:30] 583.6 1127.7 89.8 945.9 1235.6 ...
+  ..$ r  : int [1:30] 5 5 5 5 5 5 5 5 5 5 ...
+  ..$ se : num [1:30] 332 332 332 332 332 ...
+  ..$ Min: num [1:30] 6540 4631 5306 8569 7206 ...
+  ..$ Max: num [1:30] 7983 7392 5546 10812 10291 ...
+  ..$ Q25: num [1:30] 7038 5163 5370 8867 8190 ...
+  ..$ Q50: num [1:30] 7579 5234 5413 9791 8913 ...
+  ..$ Q75: num [1:30] 7750 6478 5450 10306 9794 ...
+ $ comparison: NULL
+ $ groups    :'data.frame': 30 obs. of  2 variables:
+  ..$ lfa   : num [1:30] 10288 9669 8879 8672 8384 ...
+  ..$ groups: chr [1:30] "a" "ab" "bc" "c" ...
+ - attr(*, "class")= chr "group"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Welcome to emmeans.
+Caution: You lose important information if you filter this package's results.
+See '? untidy'</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcomp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Cargando paquete requerido: mvtnorm</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Cargando paquete requerido: survival</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Cargando paquete requerido: TH.data</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Cargando paquete requerido: MASS</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Adjuntando el paquete: 'TH.data'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:MASS':
+
+    geyser</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+✖ dplyr::select() masks MASS::select()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>mc<span class="ot">&lt;-</span> <span class="fu">emmeans</span>(modelo, <span class="sc">~</span> riego <span class="sc">|</span> geno) <span class="sc">%&gt;%</span> </span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cld</span>(<span class="at">letters =</span> letters, <span class="at">reversed =</span> T)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>mc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>geno = G01:
+ riego    emmean  SE  df lower.CL upper.CL .group
+ irrigado   7378 332 116   6721.0     8035  1    
+ sequia     3040 332 116   2382.7     3696   2   
+
+geno = G02:
+ riego    emmean  SE  df lower.CL upper.CL .group
+ irrigado   5780 332 116   5122.7     6436  1    
+ sequia     2717 332 116   2060.2     3374   2   
+
+geno = G03:
+ riego    emmean  SE  df lower.CL upper.CL .group
+ irrigado   5417 332 116   4759.9     6074  1    
+ sequia     2059 332 116   1402.2     2716   2   
+
+geno = G04:
+ riego    emmean  SE  df lower.CL upper.CL .group
+ irrigado   9669 332 116   9012.0    10326  1    
+ sequia     2979 332 116   2321.8     3636   2   
+
+geno = G05:
+ riego    emmean  SE  df lower.CL upper.CL .group
+ irrigado   8879 332 116   8221.9     9536  1    
+ sequia     1784 332 116   1126.8     2441   2   
+
+geno = G06:
+ riego    emmean  SE  df lower.CL upper.CL .group
+ irrigado   7455 332 116   6798.5     8112  1    
+ sequia     3348 332 116   2691.2     4005   2   
+
+geno = G07:
+ riego    emmean  SE  df lower.CL upper.CL .group
+ irrigado   1374 332 116    717.3     2031  1    
+ sequia      681 332 116     23.8     1338  1    
+
+geno = G08:
+ riego    emmean  SE  df lower.CL upper.CL .group
+ irrigado   7287 332 116   6629.9     7944  1    
+ sequia     2374 332 116   1716.7     3031   2   
+
+geno = G09:
+ riego    emmean  SE  df lower.CL upper.CL .group
+ irrigado  10288 332 116   9630.8    10945  1    
+ sequia     3073 332 116   2416.4     3730   2   
+
+geno = G10:
+ riego    emmean  SE  df lower.CL upper.CL .group
+ irrigado   5271 332 116   4614.5     5928  1    
+ sequia     2925 332 116   2267.8     3582   2   
+
+geno = G11:
+ riego    emmean  SE  df lower.CL upper.CL .group
+ irrigado   6855 332 116   6198.0     7512  1    
+ sequia     2062 332 116   1405.5     2719   2   
+
+geno = G12:
+ riego    emmean  SE  df lower.CL upper.CL .group
+ irrigado   7417 332 116   6760.4     8074  1    
+ sequia     2446 332 116   1789.5     3103   2   
+
+geno = G13:
+ riego    emmean  SE  df lower.CL upper.CL .group
+ irrigado   8672 332 116   8015.5     9329  1    
+ sequia     3126 332 116   2469.2     3783   2   
+
+geno = G14:
+ riego    emmean  SE  df lower.CL upper.CL .group
+ irrigado   8384 332 116   7727.2     9041  1    
+ sequia     3514 332 116   2857.5     4171   2   
+
+geno = G15:
+ riego    emmean  SE  df lower.CL upper.CL .group
+ irrigado   6367 332 116   5710.1     7024  1    
+ sequia     1581 332 116    923.6     2237   2   
+
+Results are averaged over the levels of: bloque 
+Confidence level used: 0.95 
+significance level used: alpha = 0.05 
+NOTE: If two or more means share the same grouping symbol,
+      then we cannot show them to be different.
+      But we also did not show them to be the same. </code></pre>
+</div>
+</div>
+<p>##Grafico</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(inti)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Cargando paquete requerido: shiny</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_smr</span>(<span class="at">data =</span> mc</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>         , <span class="at">type =</span> <span class="st">"bar"</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>         , <span class="at">x =</span> <span class="st">"geno"</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>         , <span class="at">y =</span> <span class="st">"emmean"</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>         , <span class="at">group =</span> <span class="st">"riego"</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>         , <span class="at">sig =</span> <span class="st">".group"</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>         , <span class="at">error =</span> <span class="st">"SE"</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>         , <span class="at">ylimits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">12000</span>, <span class="dv">2000</span>)</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 
 </main>

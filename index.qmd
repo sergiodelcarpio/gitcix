@@ -61,7 +61,7 @@ book
 library(readxl)
 fb <- read_excel("LA MOLINA 2014 POTATO WUE (FB).xlsx", 
     sheet = "fb")
-View(LA_MOLINA_2014_POTATO_WUE_FB_)
+View(fb)
 str(fb)
 
 ```
@@ -121,19 +121,4 @@ plot_smr(data = mc
 )
 ```
 
-
-```{r}
-
-library(inti)
-plot_smr(data = mc
-         , type = "bar"
-         , x = "geno"
-         , y = "emmean"
-         , group = "riego"
-         , sig = ".group"
-         , error = "SE"
-         , ylimits = c(0, 12000, 2000)
-)
-
-```
 
