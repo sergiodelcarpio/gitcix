@@ -50,18 +50,90 @@ outdesign <-design.ab(trt = trt,r=5)
 str(outdesign)
 book<-outdesign$book
 book
+```
+
+
+#Analisis de datos
+
+
+```{r}
+
+library(readxl)
+fb <- read_excel("LA MOLINA 2014 POTATO WUE (FB).xlsx", 
+    sheet = "fb")
+View(LA_MOLINA_2014_POTATO_WUE_FB_)
+str(fb)
+
+```
+
+##Modelo estadistico
+
+```{r}
+modelo <- aov(formula = lfa ~ riego + geno +riego*geno + bloque, data =fb)
+
+
+anova(modelo)
+
+plot(modelo)
 
 ```
 
 
+## Comparación de medias
+
+```{r}
+library(agricolae)
+
+mc <- agricolae::duncan.test(y= modelo, trt = c("riego", "geno"))
+
+mc
+
+str(mc)
 
 
+```
+
+```{r}
+library(emmeans)
+library(multcomp)
+library(tidyverse)
+
+mc<- emmeans(modelo, ~ riego | geno) %>% 
+  cld(letters = letters, reversed = T)
+
+mc
+```
 
 
+##Grafico
 
 
+```{r}
+library(inti)
+plot_smr(data = mc
+         , type = "bar"
+         , x = "geno"
+         , y = "emmean"
+         , group = "riego"
+         , sig = ".group"
+         , error = "SE"
+         , ylimits = c(0, 12000, 2000)
+)
+```
 
 
+```{r}
 
+library(inti)
+plot_smr(data = mc
+         , type = "bar"
+         , x = "geno"
+         , y = "emmean"
+         , group = "riego"
+         , sig = ".group"
+         , error = "SE"
+         , ylimits = c(0, 12000, 2000)
+)
 
+```
 
