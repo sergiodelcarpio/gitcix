@@ -120,5 +120,3 @@ plot_smr(data = mc
          , ylimits = c(0, 12000, 2000)
 )
 ```
-
-
