@@ -1,0 +1,65 @@
+# Cargar librerías necesarias
+library(ggplot2)
+library(car)
+library(dplyr)
+library(readxl)
+# Cargar los datos
+
+setwd("D:/UNPRG/CAPACITACION/CURSO R AVANZADO/CURSO ESTADÍSTICA APLICADA A LA INVESTIGACIÓN CON RSTUDIO e IA/EJERCICIOS")
+
+
+datos <- read_excel("pesos_de_pollos_1.xlsx")
+
+# Asegurarse de que la columna 'peso' sea numérica
+datos$peso <- as.numeric(as.character(datos$peso))
+# Revisar si hay valores NA creados al intentar convertir los datos a numérico
+# Esto puede ocurrir si hay valores no numéricos en la columna
+if(any(is.na(datos$peso))) {
+  print("Algunos valores en 'peso' no pudieron convertirse a numérico y se convirtieron en NA.")
+}
+
+
+# Visualizar primeras filas para entender la estructura
+head(datos)
+
+# 1. Prueba de normalidad
+# Aquí se asume que la columna de pesos es 'peso' y la columna de tratamiento es 'tratamiento'
+shapiro.test(datos$peso)
+
+
+# Histograma y QQ plot para evaluar la normalidad
+ggplot(datos, aes(x = peso)) + 
+  geom_histogram(bins = 15, color = "black", fill = "lightblue") + 
+  labs(title = "Histograma de pesos", x = "Peso", y = "Frecuencia")
+
+ggplot(datos, aes(sample = peso)) + 
+  stat_qq() + 
+  stat_qq_line() + 
+  labs(title = "Gráfico QQ de pesos")
+
+# 2. Gráfico de boxplot para visualizar la distribución de pesos entre tratamientos
+ggplot(datos, aes(x = tratamiento, y = peso)) + 
+  geom_boxplot(fill = "lightblue", color = "black") +
+  labs(title = "Boxplot de pesos por tratamiento", x = "Tratamiento", y = "Peso")
+
+# Convertir la columna 'tratamiento' a factor
+datos$tratamiento <- as.factor(datos$tratamiento)
+
+# 3. Prueba de homogeneidad de varianzas (Prueba de Levene)
+leveneTest(peso ~ tratamiento, data = datos)
+
+# 4. Prueba de comparación entre tratamientos (ANOVA)
+anova_result <- aov(peso ~ tratamiento, data = datos)
+summary(anova_result)
+
+# 5. Prueba de comparación de medias (Test de Tukey)
+p_value <- summary(anova_result)[[1]]$`Pr(>F)`[1]  # Extraer el valor p correcto
+
+if (!is.na(p_value) && p_value < 0.05) {
+  tukey_result <- TukeyHSD(anova_result)
+  print(tukey_result)
+  plot(tukey_result)
+} else {
+  print("No hay diferencias significativas entre tratamientos, no se realiza prueba de Tukey.")
+}
+
