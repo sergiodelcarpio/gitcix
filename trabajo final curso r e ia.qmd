@@ -88,3 +88,4 @@ if (!is.na(p_value) && p_value < 0.05) {
 } else {
   print("No hay diferencias significativas entre tratamientos, no se realiza prueba de Tukey.")
 }
+
